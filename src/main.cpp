@@ -98,33 +98,34 @@ int main(void)
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (const void*)0);
 
 	const std::string vertexShader =
-	    "#version 330 core\n"
+	    "#version 330 compatibility\n"
+	    "#extension GL_ARB_separate_shader_objects : enable"
 	    "\n"
-	    "layout(location = 0) out vec4 position;\n"
+	    "layout(location = 0) in vec4 position;\n"
 	    "\n"
 	    "void main()\n"
 	    "{\n"
 	    "	gl_Position = position;\n"
-
-	    "}\n"
-	    "/n";
+	    //"	vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
+	    "}\n";
 
 	const std::string fragmentShader =
-	    "#version 330 core\n"
+	    "#version 330 compatibility\n"
+	    "#extension GL_ARB_separate_shader_objects : enable"
 	    "\n"
-	    "layout(location = 0) in vec4 color;\n"
+	    "layout(location = 0) out vec4 color;\n"
 	    "\n"
 	    "void main()\n"
 	    "{\n"
 	    "	color = vec4(1.0,0.0,0.0,1.0);\n"
 
-	    "}\n"
-	    "/n";
+	    "}\n";
 
-	unsigned int shader = CreateShader(vertexShader,fragmentShader);
-	
+	unsigned int shader = CreateShader(vertexShader, fragmentShader);
+
 	glUseProgram(shader);
-	
+
+	glDeleteShader(shader);
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
