@@ -5,11 +5,12 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include "renderer.h"
 
 
 inline bool exists_test0(const std::string& name) {
-    std::ifstream f(name.c_str());
-    return f.good();
+	std::ifstream f(name.c_str());
+	return f.good();
 }
 
 static std::stringstream parseShader(const std::string& filepath)
@@ -94,42 +95,70 @@ int main(void)
 	/* Make the window's context current */
 	//glfwInitContextVersion(3, 3);
 	//glewExperimental = GL_TRUE;
-	//glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	glfwMakeContextCurrent(window);
 
 	if (glewInit() != GLEW_OK) {
 		std::cout << "Error" << std::endl;
 	}
 
-	std::cout << "OpenGL version "<< glGetString(GL_VERSION) << std::endl;
+	std::cout << "OpenGL version " << glGetString(GL_VERSION) << std::endl;
 
-	std::cout << "GLSL version "<< glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+	std::cout << "GLSL version " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
 
-	float positions[6] = {
+	float positions[8] = {
 		-0.5f, -0.5f,
-		0.0f, 0.5f,
-		0.5f, -0.5f
+		0.5f, -0.5f,
+		0.5f,  0.5f,
+		-0.5f,  0.5f
 	};
 
+	unsigned int indices[6] = {
+		0, 1, 2,
+		2, 3, 0
+	};
 	// Generate buffers
-
+	unsigned int vao;
 	unsigned int vbuffer;
+	unsigned int ibo;
+
+	glGenVertexArrays(1, &vao);
+
+	glBindVertexArray(vao);
+
 
 	glGenBuffers(1, &vbuffer);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
 
-	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (const void*)0);
 
+	glGenBuffers(1, &ibo);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
 	unsigned int shader = CreateShader();
 
-	glUseProgram(shader);
 
+
+	int location = glGetUniformLocation(shader, "u_Color");
+	ASSERT(location != -1);
+
+	float r = 0.0f, inc = 0.01f;
+
+	glUseProgram(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glDeleteShader(shader);
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -137,7 +166,17 @@ int main(void)
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glUseProgram(shader);
+		GLCall(glUniform4f(location, r, 0.2f, 0.3f, 1.0f));
+		glBindVertexArray(vao);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+
+		if ((r > 1.0f) || r < 0.0f) inc = -inc;
+		r += inc;
+             
+
+		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
