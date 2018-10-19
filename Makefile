@@ -9,7 +9,7 @@ build/main: build/main.o
 	g++ build/main.o -o build/main -lGL -lGLU -lglfw -lGLEW -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor
 	
 run: build/main
-	./build/main
+	MESA_GL_VERSION_OVERRIDE=3.3 ./build/main
 
 clean:
 	rm -r build/

@@ -2,6 +2,30 @@
 #include <GLFW/glfw3.h>
 #define GLEW_STATIC
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+
+
+inline bool exists_test0(const std::string& name) {
+    std::ifstream f(name.c_str());
+    return f.good();
+}
+
+static std::stringstream parseShader(const std::string& filepath)
+{
+	std::ifstream stream(filepath);
+	std::string line;
+	std::stringstream source;
+
+	while (getline(stream, line))
+	{
+		source << line << "\n";
+	}
+
+	return source;
+}
+
 
 static unsigned int CompileShader( unsigned int typ, const std::string& source )
 {
@@ -28,11 +52,16 @@ static unsigned int CompileShader( unsigned int typ, const std::string& source )
 	return id;
 }
 
-static unsigned int CreateShader(const std::string& vertexShader , const std::string& fragmentShader)
+
+static unsigned int CreateShader()
 {
+	//std::cout << "file exist " << exists_test0("Assets/shaders/vertexShader.glsl") << std::endl;
+	const std::stringstream vertexShader = parseShader("Assets/shaders/vertexShader.glsl");
+	const std::stringstream fragmentShader = parseShader("Assets/shaders/fragmentShader.glsl");
+
 	unsigned int program = glCreateProgram();
-	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader.str());
+	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader.str());
 
 	glAttachShader(program, vs);
 	glAttachShader(program, fs);
@@ -72,9 +101,9 @@ int main(void)
 		std::cout << "Error" << std::endl;
 	}
 
-	std::cout << glGetString(GL_VERSION) << std::endl;
+	std::cout << "OpenGL version "<< glGetString(GL_VERSION) << std::endl;
 
-	std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+	std::cout << "GLSL version "<< glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
 
 	float positions[6] = {
@@ -85,11 +114,11 @@ int main(void)
 
 	// Generate buffers
 
-	unsigned int buffer;
+	unsigned int vbuffer;
 
-	glGenBuffers(1, &buffer);
+	glGenBuffers(1, &vbuffer);
 
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
 
 	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
 
@@ -97,31 +126,7 @@ int main(void)
 
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (const void*)0);
 
-	const std::string vertexShader =
-	    "#version 330 compatibility\n"
-	    "#extension GL_ARB_separate_shader_objects : enable"
-	    "\n"
-	    "layout(location = 0) in vec4 position;\n"
-	    "\n"
-	    "void main()\n"
-	    "{\n"
-	    "	gl_Position = position;\n"
-	    //"	vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
-	    "}\n";
-
-	const std::string fragmentShader =
-	    "#version 330 compatibility\n"
-	    "#extension GL_ARB_separate_shader_objects : enable"
-	    "\n"
-	    "layout(location = 0) out vec4 color;\n"
-	    "\n"
-	    "void main()\n"
-	    "{\n"
-	    "	color = vec4(1.0,0.0,0.0,1.0);\n"
-
-	    "}\n";
-
-	unsigned int shader = CreateShader(vertexShader, fragmentShader);
+	unsigned int shader = CreateShader();
 
 	glUseProgram(shader);
 
