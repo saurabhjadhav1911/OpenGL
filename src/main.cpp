@@ -6,6 +6,10 @@
 #include <string>
 #include <sstream>
 #include "renderer.h"
+#include "vertexBuffer.h"
+#include "vertexArray.h"
+#include "vertexBufferLayout.h"
+#include "indexBuffer.h"
 
 
 inline bool exists_test0(const std::string& name) {
@@ -122,30 +126,17 @@ int main(void)
 		2, 3, 0
 	};
 	// Generate buffers
-	unsigned int vao;
-	unsigned int vbuffer;
-	unsigned int ibo;
-
-	glGenVertexArrays(1, &vao);
-
-	glBindVertexArray(vao);
 
 
-	glGenBuffers(1, &vbuffer);
+	vertexArray vao;
+	vertexBufferLayout layout;
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
+	vertexBuffer vb(positions, 4 * 2 * sizeof(float));
+	layout.Push<float>(2);
+	vao.AddBuffer(vb, layout);
 
-	glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+	indexBuffer ib(indices, 6);
 
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (const void*)0);
-
-	glGenBuffers(1, &ibo);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
 	unsigned int shader = CreateShader();
 
@@ -168,13 +159,13 @@ int main(void)
 
 		glUseProgram(shader);
 		GLCall(glUniform4f(location, r, 0.2f, 0.3f, 1.0f));
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		vao.Bind();
+		ib.Bind();
 
 
 		if ((r > 1.0f) || r < 0.0f) inc = -inc;
 		r += inc;
-             
+
 
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
