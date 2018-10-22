@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include "renderer.h"
 #include "indexBuffer.h"
+#include <iostream>
 
 indexBuffer::indexBuffer(const void* data, unsigned int count)
 {
@@ -9,6 +10,8 @@ indexBuffer::indexBuffer(const void* data, unsigned int count)
 	m_Count = count;
 	
 	GLCall(glGenBuffers(1, &m_RendererID));
+
+	std::cout << "indexBuffer created with id " << m_RendererID << std::endl;
 
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID));
 

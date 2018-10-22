@@ -10,73 +10,12 @@
 #include "vertexArray.h"
 #include "vertexBufferLayout.h"
 #include "indexBuffer.h"
+#include "shader.h"
 
 
 inline bool exists_test0(const std::string& name) {
 	std::ifstream f(name.c_str());
 	return f.good();
-}
-
-static std::stringstream parseShader(const std::string& filepath)
-{
-	std::ifstream stream(filepath);
-	std::string line;
-	std::stringstream source;
-
-	while (getline(stream, line))
-	{
-		source << line << "\n";
-	}
-
-	return source;
-}
-
-
-static unsigned int CompileShader( unsigned int typ, const std::string& source )
-{
-	unsigned int id = glCreateShader(typ);
-	const char* src = source.c_str();
-	glShaderSource(id, 1, &src, nullptr);
-	glCompileShader(id);
-
-	int result;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-
-	if (result == GL_FALSE)
-	{
-		int length;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char* message = (char*)alloca(length * sizeof(char));
-		glGetShaderInfoLog(id, length, &length, message);
-		//std::cout << "Failed to compile shader" << "%d", typ << std::endl;
-		std::cout << message << std::endl;
-		glDeleteShader(id);
-		return  0;
-
-	}
-	return id;
-}
-
-
-static unsigned int CreateShader()
-{
-	//std::cout << "file exist " << exists_test0("Assets/shaders/vertexShader.glsl") << std::endl;
-	const std::stringstream vertexShader = parseShader("Assets/shaders/vertexShader.glsl");
-	const std::stringstream fragmentShader = parseShader("Assets/shaders/fragmentShader.glsl");
-
-	unsigned int program = glCreateProgram();
-	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader.str());
-	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader.str());
-
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-	glLinkProgram(program);
-	glValidateProgram(program);
-
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-
-	return program;
 }
 
 
@@ -137,28 +76,29 @@ int main(void)
 
 	indexBuffer ib(indices, 6);
 
+	shaderProgram shader;
 
-	unsigned int shader = CreateShader();
+	SShader vertexShader("Assets/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+	SShader fragmentShader("Assets/shaders/fragmentShader.glsl", GL_FRAGMENT_SHADER);
+
+	shader.AddShader(vertexShader);
+	shader.AddShader(fragmentShader);
 
 
-
-	int location = glGetUniformLocation(shader, "u_Color");
-	ASSERT(location != -1);
+	shader.CreateShaderProgram();
 
 	float r = 0.0f, inc = 0.01f;
 
-	glUseProgram(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glDeleteShader(shader);
+	shader.DeleteShader();
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(shader);
-		GLCall(glUniform4f(location, r, 0.2f, 0.3f, 1.0f));
+		shader.Bind();
+		shader.SetUniform4f("u_Color", r, 0.2f, 0.3f, 1.0f);
 		vao.Bind();
 		ib.Bind();
 

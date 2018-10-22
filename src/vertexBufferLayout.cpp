@@ -14,7 +14,9 @@ template<>
 void vertexBufferLayout::Push<float>(unsigned int count)
 {
 	m_Elements.push_back({GL_FLOAT, count, GL_FALSE});
+	//std::cout << "m_Elements " << m_Elements[0] << std::endl;
 	m_Stride += count*vertexBufferElement::getSizeofType(GL_FLOAT);
+	std::cout << "m_Stride " << m_Stride << std::endl;
 }
 
 template<>

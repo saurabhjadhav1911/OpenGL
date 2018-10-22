@@ -1,10 +1,13 @@
 #include <GL/glew.h>
 #include "renderer.h"
 #include "vertexBuffer.h"
+#include <iostream>
 
 vertexBuffer::vertexBuffer(const void* data,unsigned int size)
 {
 	GLCall(glGenBuffers(1, &m_RendererID));
+
+	std::cout << "vertexBuffer created with id " << m_RendererID << std::endl;
 
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
 
