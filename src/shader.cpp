@@ -72,6 +72,15 @@ shaderProgram::shaderProgram()
 }
 shaderProgram::~shaderProgram()
 {
+	/*############################################################################
+
+	when the SShader object is copied to vector memory the destructor destroys the 
+	referance ID of the compiled shader 
+	
+	Hence the SShader object should be created by emblace_back while the 
+	optimization process afterwards
+
+	############################################################################*/
 	//glDeleteShader(m_rendererID);
 }
 void shaderProgram::Bind() const

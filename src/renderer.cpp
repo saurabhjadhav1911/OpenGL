@@ -15,3 +15,25 @@ bool GLLogCall(const char* function, const char* file, int line)
 	}
 	return true;
 }
+
+Renderer::Renderer()
+{
+
+}
+Renderer::~Renderer()
+{
+
+}
+void Renderer::Draw(const vertexArray& va, const indexBuffer& ib , const shaderProgram& shader) const
+{
+	shader.Bind();
+	va.Bind();
+	ib.Bind();
+
+	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+}
+
+void Renderer::Clear() const
+{
+	GLCall(glClear(GL_COLOR_BUFFER_BIT));
+}

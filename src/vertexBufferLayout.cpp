@@ -1,5 +1,5 @@
+#include "renderer.h"
 #include "vertexBufferLayout.h"
-
 vertexBufferLayout::vertexBufferLayout()
 {
 	m_Stride = 0;
@@ -7,7 +7,7 @@ vertexBufferLayout::vertexBufferLayout()
 
 vertexBufferLayout::~vertexBufferLayout()
 {
-	m_Stride = m_Stride;
+	
 }
 
 template<>
