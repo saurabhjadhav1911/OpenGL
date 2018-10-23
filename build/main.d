@@ -162,4 +162,52 @@ build/main.o: src/main.cpp src/renderer.h src/vertexArray.h \
  Dependancies/glm/glm/gtc/../ext/matrix_clip_space.inl \
  Dependancies/glm/glm/gtc/../ext/matrix_transform.hpp \
  Dependancies/glm/glm/gtc/../ext/matrix_transform.inl \
- Dependancies/glm/glm/gtc/matrix_transform.inl src/vertexBufferLayout.h
+ Dependancies/glm/glm/gtc/matrix_transform.inl src/vertexBufferLayout.h \
+ Dependancies/glm/glm/gtx/string_cast.hpp \
+ Dependancies/glm/glm/gtx/../gtc/type_precision.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/quaternion.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_relational.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_relational.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/../detail/type_float.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/../detail/setup.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/quaternion_common.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/../ext/quaternion_geometric.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/../ext/quaternion_geometric.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/quaternion_common.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/quaternion_common_simd.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/quaternion_float.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/../detail/type_quat.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/../detail/../ext/quaternion_relational.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/../detail/../ext/quaternion_relational.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/../detail/type_quat.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/../detail/type_quat_simd.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/quaternion_float_precision.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/quaternion_double.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/quaternion_double_precision.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/quaternion_trigonometric.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/quaternion_trigonometric.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/quaternion_transform.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/quaternion_transform.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/quaternion.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/epsilon.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../detail/setup.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/epsilon.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/quaternion_simd.inl \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/vec1.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_bool1.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_bool1_precision.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_float1.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_float1_precision.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_double1.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_double1_precision.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_int1.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_int1_precision.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_uint1.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../gtc/../ext/vector_uint1_precision.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../ext/scalar_int_sized.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../ext/../detail/setup.hpp \
+ Dependancies/glm/glm/gtx/../gtc/../ext/scalar_uint_sized.hpp \
+ Dependancies/glm/glm/gtx/../gtc/type_precision.inl \
+ Dependancies/glm/glm/gtx/../gtx/dual_quaternion.hpp \
+ Dependancies/glm/glm/gtx/../gtx/dual_quaternion.inl \
+ Dependancies/glm/glm/gtx/string_cast.inl
