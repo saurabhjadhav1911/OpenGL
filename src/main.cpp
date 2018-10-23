@@ -11,6 +11,8 @@
 #include "vertexBufferLayout.h"
 #include "indexBuffer.h"
 #include "shader.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 
 inline bool exists_test0(const std::string& name) {
@@ -66,6 +68,8 @@ int main(void)
 	};
 	// Generate buffers
 
+	GLCall(glEnable(GL_BLEND));
+	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
 	vertexArray vao;
 	vertexBufferLayout layout;
@@ -76,8 +80,10 @@ int main(void)
 
 	indexBuffer ib(indices, 6);
 
-	shaderProgram shader;
 
+	glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+
+	shaderProgram shader;
 	SShader vertexShader("Assets/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
 	SShader fragmentShader("Assets/shaders/fragmentShader.glsl", GL_FRAGMENT_SHADER);
 
@@ -85,19 +91,28 @@ int main(void)
 	shader.AddShader(fragmentShader);
 
 
+
 	shader.CreateShaderProgram();
+
+
 
 	float r = 0.0f, inc = 0.01f;
 
-	shader.DeleteShader();
 
+	shader.DeleteShader();
 	Renderer rend;
+
+
+	shader.Bind();
+	shader.SetUniformMat4f("u_MVP", proj);
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Render here */
 		rend.Clear();
 		shader.Bind();
+
 		shader.SetUniform4f("u_Color", r, 0.2f, 0.3f, 1.0f);
 
 
@@ -105,7 +120,7 @@ int main(void)
 		r += inc;
 
 
-		rend.Draw(vao,ib,shader);
+		rend.Draw(vao, ib, shader);
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 

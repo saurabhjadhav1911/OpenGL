@@ -10,13 +10,15 @@ OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 LDFLAGS := -lGL -lGLU -lglfw -lGLEW -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor
 CPPFLAGS := -std=c++11
 CXXFLAGS := -MMD
+INC_DIR  := -IDependancies/glm
+
 -include $(OBJ_FILES:.o=.d)
 
 $(TARGET): $(OBJ_FILES)
 	g++ -o $@ $^ $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	g++ $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	g++ $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $< $(INC_DIR)
 
 #build/main.o: src/main.cpp 
 #	#mkdir build

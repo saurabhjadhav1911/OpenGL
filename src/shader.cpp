@@ -4,6 +4,8 @@
 #include "renderer.h"
 #include <iostream>
 #include <fstream>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 SShader::SShader(const std::string& filename, unsigned int type)
 {
@@ -13,7 +15,7 @@ SShader::SShader(const SShader& sh)
 	: m_rendererID(sh.m_rendererID) , m_Filepath(sh.m_Filepath)
 {
 
-	std::cout << "copied" <<std::endl;
+	std::cout << "copied" << std::endl;
 }
 SShader::~SShader()
 {
@@ -43,14 +45,14 @@ unsigned int SShader::GetUnifromLocation(const std::string& name)
 unsigned int SShader::CompileShader( unsigned int typ, const std::string& source )
 {
 	unsigned int id = glCreateShader(typ);
-	std::cout << "shadecompileid"<< id <<std::endl;
+	std::cout << "shadecompileid" << id << std::endl;
 	const char* src = source.c_str();
 	GLCall(glShaderSource(id, 1, &src, nullptr));
 	GLCall(glCompileShader(id));
 
 	int result;
 	GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
-	std::cout << "shadecompileres"<< result <<std::endl;
+	std::cout << "shadecompileres" << result << std::endl;
 	if (result == GL_FALSE)
 	{
 		int length;
@@ -68,16 +70,16 @@ unsigned int SShader::CompileShader( unsigned int typ, const std::string& source
 shaderProgram::shaderProgram()
 {
 	m_rendererID = glCreateProgram();
-	std::cout << "shaderProgramID"<< m_rendererID <<std::endl;
+	std::cout << "shaderProgramID" << m_rendererID << std::endl;
 }
 shaderProgram::~shaderProgram()
 {
 	/*############################################################################
 
-	when the SShader object is copied to vector memory the destructor destroys the 
-	referance ID of the compiled shader 
-	
-	Hence the SShader object should be created by emblace_back while the 
+	when the SShader object is copied to vector memory the destructor destroys the
+	referance ID of the compiled shader
+
+	Hence the SShader object should be created by emblace_back while the
 	optimization process afterwards
 
 	############################################################################*/
@@ -95,7 +97,7 @@ void shaderProgram::Unbind() const
 void shaderProgram::AddShader(const SShader& m_SShader)
 {
 	shaders.push_back(m_SShader);
-	std::cout <<  "pusshed shader to vec" << m_SShader.m_Filepath <<std::endl;
+	std::cout <<  "pusshed shader to vec" << m_SShader.m_Filepath << std::endl;
 
 }
 unsigned int shaderProgram::GetUnifromLocation(const std::string& name)
@@ -114,7 +116,7 @@ unsigned int shaderProgram::CreateShaderProgram()
 	for (unsigned int i = 0; i < shaders.size(); i++)
 	{
 		/* code */
-		std::cout << i << m_rendererID<< "shaderID" << shaders[i].GetID() <<std::endl;
+		std::cout << i << m_rendererID << "shaderID" << shaders[i].GetID() << std::endl;
 		GLCall(glAttachShader(m_rendererID, shaders[i].GetID()));
 
 	}
@@ -133,4 +135,8 @@ unsigned int shaderProgram::CreateShaderProgram()
 void shaderProgram::SetUniform4f(const std::string& name, float v0, float v1, float f0, float f1)
 {
 	GLCall(glUniform4f(GetUnifromLocation(name), v0, v1, f0, f1));
+}
+void shaderProgram::SetUniformMat4f(const std::string &name, glm::mat4& matrix)
+{
+	GLCall(glUniformMatrix4fv(GetUnifromLocation(name), 1, GL_FALSE, &matrix[0][0]));
 }
