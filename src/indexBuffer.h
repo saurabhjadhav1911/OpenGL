@@ -8,6 +8,7 @@ public:
 
 	void Bind() const;
 	void Unbind();
+	unsigned int GetCount() const; 
 
 private:
 	unsigned int m_RendererID;

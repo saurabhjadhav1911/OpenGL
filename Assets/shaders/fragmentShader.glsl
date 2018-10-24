@@ -8,3 +8,4 @@ void main()
 {
 	color = u_Color;
 }
+

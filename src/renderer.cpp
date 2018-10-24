@@ -29,8 +29,8 @@ void Renderer::Draw(const vertexArray& va, const indexBuffer& ib , const shaderP
 	shader.Bind();
 	va.Bind();
 	ib.Bind();
-
-	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+	unsigned int ibcount = ib.GetCount();
+	GLCall(glDrawElements(GL_TRIANGLES, ibcount, GL_UNSIGNED_INT, nullptr));
 }
 
 void Renderer::Clear() const

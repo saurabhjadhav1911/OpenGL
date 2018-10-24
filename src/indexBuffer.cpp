@@ -8,7 +8,7 @@ indexBuffer::indexBuffer(const void* data, unsigned int count)
 	ASSERT((sizeof(unsigned int)) == sizeof(GLuint));
 
 	m_Count = count;
-	
+
 	GLCall(glGenBuffers(1, &m_RendererID));
 
 	std::cout << "indexBuffer created with id " << m_RendererID << std::endl;
@@ -30,4 +30,8 @@ void indexBuffer::Bind() const
 void indexBuffer::Unbind()
 {
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+}
+unsigned int indexBuffer::GetCount() const
+{
+	return m_Count;
 }

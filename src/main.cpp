@@ -22,21 +22,21 @@ inline bool exists_test0(const std::string& name) {
 }
 
 float r = 0.0f, inc = 0.01f;
-glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  -6.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);
+glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
 float cameraSpeed = 1.0f;
+
+glm::mat4 view;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	std::cout << xpos << " mouse pos " << ypos << std::endl;
 
-
 }
-glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
 
 
 
@@ -55,14 +55,14 @@ void processInput(GLFWwindow *window)
 			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	*/
 
+
 	glm::vec3 front;
 
-	float yaw = r * 10.0f;
-	front.x = cos(glm::radians(yaw)) * cos(glm::radians(0.0f));
-	front.y = sin(glm::radians(0.0f));
-	front.z = sin(glm::radians(yaw)) * cos(glm::radians(0.0f));
-	cameraFront = glm::normalize(front);
-	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	float yaw = r * 360.0f;
+
+	glm::vec3 cameraPos   = glm::vec3(sin(glm::radians(yaw)), 0.5f, cos(glm::radians(0.0f)));
+
+	view = glm::lookAt(cameraPos, cameraTarget, cameraUp);
 
 	//view = glm::mat4(1.0f);
 
@@ -78,6 +78,8 @@ int main(void)
 
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	if (!window)
 	{
 		glfwTerminate();
@@ -106,31 +108,31 @@ int main(void)
 
 
 	float positions[24] = {
-		1.0f ,  -1.0f ,  -1.0f ,
-		1.0f ,  -1.0f ,   1.0f ,
-		-1.0f ,  -1.0f ,   1.0f ,
-		-1.0f ,  -1.0f ,  -1.0f ,
-		1.0f ,   1.0f ,  -1.0f ,
-		1.0f ,   1.0f ,   1.0f ,
-		-1.0f ,   1.0f ,   1.0f ,
-		-1.0f ,   1.0f ,  -1.0f
+		-1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, -1.0f, 1.0f,
+		-1.0f, -1.0f, 1.0f,
+		-1.0f, 1.0f, -1.0f,
+		1.0f, 1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f
+
 	};
 
-	unsigned int indices[42] = {
-		1, 2, 3,
-		3, 2, 1,
-		3, 4, 1,
-		1, 4, 3,
-		5, 8, 7,
-		7, 6, 5,
-		1, 5, 6,
-		6, 2, 1,
-		2, 6, 7,
-		7, 3, 2,
-		3, 7, 8,
-		8, 4, 3,
-		5, 1, 4,
-		4, 8, 5
+	unsigned int indices[] = {
+		1 - 1, 2 - 1, 3 - 1,
+		3 - 1, 4 - 1, 1 - 1,
+		1 - 1, 4 - 1, 3 - 1,
+		5 - 1, 8 - 1, 7 - 1,
+		7 - 1, 6 - 1, 5 - 1,
+		1 - 1, 5 - 1, 6 - 1,
+		6 - 1, 2 - 1, 1 - 1,
+		2 - 1, 6 - 1, 7 - 1,
+		7 - 1, 3 - 1, 2 - 1,
+		3 - 1, 7 - 1, 8 - 1,
+		8 - 1, 4 - 1, 3 - 1,
+		5 - 1, 1 - 1, 4 - 1,
+		4 - 1, 8 - 1, 5 - 1
 	};
 	// Generate buffers
 
@@ -145,7 +147,7 @@ int main(void)
 	layout.Push<float>(3);
 	vao.AddBuffer(vb, layout);
 
-	indexBuffer ib(indices, 14);
+	indexBuffer ib(indices, 39);
 
 
 	glm::mat4 proj = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, -4.0f, 4.0f);
@@ -194,8 +196,7 @@ int main(void)
 		shader.SetUniform4f("u_Color", r, 0.2f, 0.3f, 1.0f);
 
 
-		if ((r > 1.0f) || r < 0.0f) inc = -inc;
-		r += inc;
+		r = (r + inc) - floor(r + inc);
 
 
 		rend.Draw(vao, ib, shader);
